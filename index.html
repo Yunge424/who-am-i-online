@@ -1,57 +1,178 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Who Am I Online?</title>
+
+  <title>Who Am I Online? | Digital Identity Lab</title>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       background: #101426;
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       text-align: center;
     }
 
     main {
-      max-width: 650px;
-      padding: 30px;
+      width: 100%;
+      max-width: 760px;
+      padding: 40px 24px;
     }
 
     h1 {
-      font-size: clamp(40px, 8vw, 72px);
+      font-size: clamp(38px, 7vw, 68px);
       color: #b5a4ff;
-      margin-bottom: 15px;
+      line-height: 1.15;
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin: 25px 0;
     }
 
     p {
       color: #c6c9dd;
+      font-size: 16px;
       line-height: 1.7;
     }
 
     button {
-      margin-top: 25px;
-      padding: 15px 30px;
+      padding: 15px 26px;
+      margin: 8px;
       background: #806bff;
       color: white;
       border: none;
       border-radius: 30px;
       cursor: pointer;
       font-size: 16px;
+      transition: background 0.2s, transform 0.2s;
     }
 
     button:hover {
       background: #a493ff;
+      transform: translateY(-2px);
+    }
+
+    button:focus-visible {
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .options button {
+      margin: 0;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 9px;
+      background: #30364d;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 25px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: #a493ff;
+      transition: width 0.3s;
+    }
+
+    .score-card {
+      text-align: left;
+      margin: 25px 0;
+    }
+
+    .score-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .score-bar {
+      height: 13px;
+      background: #30364d;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        #806bff,
+        #b5a4ff
+      );
+      border-radius: 10px;
+    }
+
+    .note {
+      margin: 35px 0 20px;
+      padding: 20px;
+      background: #1d2339;
+      border: 1px solid #414766;
+      border-radius: 14px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .eyebrow {
+      color: #a493ff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 30px 18px;
+      }
+
+      .options {
+        flex-direction: column;
+      }
+
+      .options button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+      }
     }
   </style>
 </head>
+
 <body>
-  <main>
+  <main id="app">
+    <p class="eyebrow">Interactive Digital Identity Lab</p>
+
     <h1>WHO AM I ONLINE?</h1>
+
     <h2>You are more than your data.</h2>
 
     <p>
@@ -63,143 +184,294 @@
       Start Your Digital Identity Experiment
     </button>
 
-    <p id="message" aria-live="polite"></p>
+    <p>
+      Discover how a simple algorithm can transform
+      your online behaviours into a digital identity.
+    </p>
   </main>
 
   <script>
-    
+    // -----------------------------------------
+    // 1. QUESTIONNAIRE DATA
+    // -----------------------------------------
 
-const button = document.getElementById("startButton");
+    const questions = [
+      {
+        question: "How do you usually use social media?",
+        options: [
+          "Sharing my life",
+          "Browsing content",
+          "Communicating with friends",
+          "Finding information"
+        ]
+      },
+      {
+        question: "How do you prefer to express yourself online?",
+        options: [
+          "Photos and videos",
+          "Written posts",
+          "Emojis and reactions",
+          "I rarely post"
+        ]
+      },
+      {
+        question: "How important is online privacy to you?",
+        options: [
+          "Extremely important",
+          "Very important",
+          "Somewhat important",
+          "Not very important"
+        ]
+      },
+      {
+        question: "What do you usually share online?",
+        options: [
+          "My everyday life",
+          "Carefully selected moments",
+          "My interests and hobbies",
+          "Very little personal information"
+        ]
+      },
+      {
+        question: "How should online platforms understand you?",
+        options: [
+          "Through my interests",
+          "Through my online interactions",
+          "I want to decide myself",
+          "I prefer not to be categorised"
+        ]
+      }
+    ];
 
-const questions = [
-  {
-    question: "How do you usually use social media?",
-    options: [
-      "Sharing my life",
-      "Browsing content",
-      "Communicating with friends",
-      "Finding information"
-    ]
-  },
-  {
-    question: "How do you prefer to express yourself online?",
-    options: [
-      "Photos and videos",
-      "Written posts",
-      "Emojis and reactions",
-      "I rarely post"
-    ]
-  },
-  {
-    question: "How important is online privacy to you?",
-    options: [
-      "Extremely important",
-      "Very important",
-      "Somewhat important",
-      "Not very important"
-    ]
-  },
-  {
-    question: "What do you usually share online?",
-    options: [
-      "My everyday life",
-      "Carefully selected moments",
-      "My interests and hobbies",
-      "Very little personal information"
-    ]
-  },
-  {
-    question: "How should online platforms understand you?",
-    options: [
-      "Through my interests",
-      "Through my online interactions",
-      "I want to decide myself",
-      "I prefer not to be categorised"
-    ]
-  }
-];
+    let currentQuestion = 0;
+    let answers = [];
 
-let currentQuestion = 0;
-let answers = [];
+    const app = document.getElementById("app");
 
-button.addEventListener("click", function() {
-  showQuestion();
-});
+    document.getElementById("startButton")
+      .addEventListener("click", function() {
+        currentQuestion = 0;
+        answers = [];
+        showQuestion();
+      });
 
-function showQuestion() {
-  const main = document.querySelector("main");
-  const question = questions[currentQuestion];
 
-  main.innerHTML = "";
+    // -----------------------------------------
+    // 2. DISPLAY QUESTION
+    // -----------------------------------------
 
-  const title = document.createElement("h1");
-  title.textContent = "Digital Identity Questionnaire";
+    function showQuestion() {
+      const question = questions[currentQuestion];
 
-  const progress = document.createElement("h2");
-  progress.textContent =
-    `Question ${currentQuestion + 1} of ${questions.length}`;
+      app.replaceChildren();
 
-  const questionText = document.createElement("p");
-  questionText.textContent = question.question;
+      const eyebrow = document.createElement("p");
+      eyebrow.className = "eyebrow";
+      eyebrow.textContent = "Digital Identity Experiment";
 
-  main.append(title, progress, questionText);
+      const title = document.createElement("h1");
+      title.textContent = "Digital Identity Questionnaire";
 
-  question.options.forEach(function(option, index) {
-    const optionButton = document.createElement("button");
-    optionButton.textContent = option;
-    optionButton.style.margin = "8px";
+      const progressText = document.createElement("h2");
+      progressText.textContent =
+        `Question ${currentQuestion + 1} of ${questions.length}`;
 
-    optionButton.addEventListener("click", function() {
-      answers[currentQuestion] = {
-        question: question.question,
-        selectedOption: option,
-        selectedIndex: index
+      const progressContainer = document.createElement("div");
+      progressContainer.className = "progress-container";
+
+      const progressFill = document.createElement("div");
+      progressFill.className = "progress-fill";
+      progressFill.style.width =
+        `${(currentQuestion / questions.length) * 100}%`;
+
+      progressContainer.appendChild(progressFill);
+
+      const questionText = document.createElement("p");
+      questionText.textContent = question.question;
+
+      const optionsContainer = document.createElement("div");
+      optionsContainer.className = "options";
+
+      question.options.forEach(function(option, index) {
+        const optionButton = document.createElement("button");
+        optionButton.type = "button";
+        optionButton.textContent = option;
+
+        optionButton.addEventListener("click", function() {
+          answers[currentQuestion] = {
+            question: question.question,
+            selectedOption: option,
+            selectedIndex: index
+          };
+
+          currentQuestion++;
+
+          if (currentQuestion < questions.length) {
+            showQuestion();
+          } else {
+            showResults();
+          }
+        });
+
+        optionsContainer.appendChild(optionButton);
+      });
+
+      app.append(
+        eyebrow,
+        title,
+        progressText,
+        progressContainer,
+        questionText,
+        optionsContainer
+      );
+    }
+
+
+    // -----------------------------------------
+    // 3. IDENTITY MAPPING ALGORITHM
+    // -----------------------------------------
+
+    function calculateIdentity(answers) {
+      const scores = {
+        visibility: 50,
+        expression: 50,
+        privacy: 50,
+        interaction: 50
       };
 
-      currentQuestion++;
+      // Artistic rules designed for this project.
+      // These are not scientific personality scores.
 
-      if (currentQuestion < questions.length) {
+      const mappings = [
+        {
+          visibility: 25,
+          interaction: 10
+        },
+        {
+          expression: 25
+        },
+        {
+          privacy: 25
+        },
+        {
+          visibility: 15,
+          privacy: -10
+        },
+        {
+          interaction: 15
+        }
+      ];
+
+      const optionWeights = [1, 0.5, 0, -0.5];
+
+      answers.forEach(function(answer, index) {
+        const weight = optionWeights[answer.selectedIndex];
+
+        Object.keys(mappings[index]).forEach(function(key) {
+          scores[key] += mappings[index][key] * weight;
+        });
+      });
+
+      Object.keys(scores).forEach(function(key) {
+        scores[key] = Math.max(
+          0,
+          Math.min(100, Math.round(scores[key]))
+        );
+      });
+
+      return scores;
+    }
+
+
+    // -----------------------------------------
+    // 4. DISPLAY IDENTITY RESULTS
+    // -----------------------------------------
+
+    function showResults() {
+      const identity = calculateIdentity(answers);
+
+      app.replaceChildren();
+
+      const eyebrow = document.createElement("p");
+      eyebrow.className = "eyebrow";
+      eyebrow.textContent = "Algorithmic Identity Profile";
+
+      const title = document.createElement("h1");
+      title.textContent = "Your Digital Identity";
+
+      const description = document.createElement("p");
+      description.textContent =
+        "This is how our algorithm interprets your answers.";
+
+      app.append(eyebrow, title, description);
+
+      const labels = {
+        visibility: "Visibility",
+        expression: "Expression",
+        privacy: "Privacy",
+        interaction: "Interaction"
+      };
+
+      Object.entries(identity).forEach(function([key, value]) {
+        const card = document.createElement("div");
+        card.className = "score-card";
+
+        const label = document.createElement("div");
+        label.className = "score-label";
+
+        const name = document.createElement("span");
+        name.textContent = labels[key];
+
+        const number = document.createElement("span");
+        number.textContent = `${value}/100`;
+
+        label.append(name, number);
+
+        const bar = document.createElement("div");
+        bar.className = "score-bar";
+
+        const fill = document.createElement("div");
+        fill.className = "score-fill";
+        fill.style.width = `${value}%`;
+
+        bar.appendChild(fill);
+        card.append(label, bar);
+        app.appendChild(card);
+      });
+
+      const note = document.createElement("div");
+      note.className = "note";
+
+      const noteTitle = document.createElement("strong");
+      noteTitle.textContent = "Is this really you?";
+
+      const noteText = document.createElement("p");
+      noteText.textContent =
+        "These scores are artistic interpretations, " +
+        "not scientific measurements. " +
+        "Our algorithm converts a limited number of " +
+        "answers into numerical categories. " +
+        "Different rules could produce different results. " +
+        "Who should decide how your digital identity " +
+        "is represented?";
+
+      note.append(noteTitle, noteText);
+
+      const restartButton = document.createElement("button");
+      restartButton.type = "button";
+      restartButton.textContent = "Start Again";
+
+      restartButton.addEventListener("click", function() {
+        currentQuestion = 0;
+        answers = [];
         showQuestion();
-      } else {
-        showResults();
-      }
-    });
+      });
 
-    main.appendChild(optionButton);
-  });
-}
+      app.append(note, restartButton);
 
-function showResults() {
-  const main = document.querySelector("main");
-  main.innerHTML = "";
-
-  const title = document.createElement("h1");
-  title.textContent = "Your Digital Identity";
-
-  const description = document.createElement("p");
-  description.textContent =
-    "You have completed the questionnaire!";
-
-  const message = document.createElement("p");
-  message.textContent =
-    "Your answers have been recorded in this browser session.";
-
-  const restartButton = document.createElement("button");
-  restartButton.textContent = "Start Again";
-
-  restartButton.addEventListener("click", function() {
-    currentQuestion = 0;
-    answers = [];
-    showQuestion();
-  });
-
-  main.append(title, description, message, restartButton);
-
-  console.log("Questionnaire answers:", answers);
-}
-
-
+      console.log("Questionnaire answers:", answers);
+      console.log("Identity parameters:", identity);
+    }
   </script>
 </body>
 </html>
-
