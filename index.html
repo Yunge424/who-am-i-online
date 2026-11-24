@@ -3,1138 +3,547 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="A critical creative coding experiment about digital identity and algorithmic representation.">
 <title>Who Am I Online? | Digital Identity Lab</title>
-
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+body{margin:0;background:#101426;color:white;font-family:Arial,sans-serif;text-align:center}
+main{max-width:1060px;margin:auto;padding:60px 24px}
+h1{font-size:clamp(38px,7vw,68px);color:#b5a4ff}
+h2{font-size:25px;margin:30px 0 15px}
+h3{font-size:19px}
+p{color:#c6c9dd;line-height:1.7}
+button{padding:15px 26px;margin:8px;background:#806bff;color:white;border:0;border-radius:30px;cursor:pointer;font-size:16px}
+button:hover{background:#a493ff}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid white;outline-offset:3px}
+a{color:#c6b9ff}
+.eyebrow{color:#a493ff;text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:bold}
+.options{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px}
+.options button{margin:0}
+.progress-container,.score-bar{background:#30364d;border-radius:10px;overflow:hidden}
+.progress-container{height:9px;margin:25px 0}
+.progress-fill{height:100%;background:#a493ff}
+.scores{max-width:760px;margin:25px auto}
+.score-card{text-align:left;margin:22px 0}
+.score-label{display:flex;justify-content:space-between;margin-bottom:10px}
+.score-bar{height:13px}
+.score-fill{height:100%;background:linear-gradient(90deg,#806bff,#b5a4ff)}
+.portrait-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin:26px 0}
+.portrait-card{padding:20px;border:1px solid #414766;border-radius:18px;background:#171c30;min-width:0}
+canvas{display:block;width:100%;height:auto;margin:16px auto;border:1px solid #414766;border-radius:14px}
+.panel{max-width:760px;margin:35px auto;padding:24px;border:1px solid #414766;border-radius:18px;background:#1d2339;text-align:left}
+.control-row{margin:22px 0}
+.control-row label{display:flex;justify-content:space-between;margin-bottom:10px}
+.control-row input{width:100%;accent-color:#a493ff}
+.secondary{background:#383f60}
+.rule,.theory-card{padding:14px 0;border-bottom:1px solid #414766}
+.rule strong,.theory-card h3{color:#d3caff}
+.rule p{margin:5px 0;font-size:14px}
+.delta{color:#b5a4ff;font-weight:bold}
+details{margin:14px 0;padding:14px;border:1px solid #414766;border-radius:10px}
+summary{cursor:pointer;font-weight:bold}
+.references{padding-left:22px;color:#c6c9dd;line-height:1.8;overflow-wrap:anywhere}
+.references li{margin-bottom:12px}
+.small{font-size:13px}
+.error{color:#ffb3bd}
+@media(max-width:680px){
+main{padding:34px 18px}
+.options{flex-direction:column}
+.options button{width:100%}
+.portrait-grid{grid-template-columns:1fr}
+.panel,.portrait-card{padding:16px}
 }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: #101426;
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-  text-align: center;
-}
-
-main {
-  max-width: 1060px;
-  margin: auto;
-  padding: 64px 24px;
-}
-
-h1 {
-  font-size: clamp(38px, 7vw, 68px);
-  color: #b5a4ff;
-  line-height: 1.15;
-  margin: 22px 0;
-}
-
-h2 {
-  font-size: clamp(21px, 3vw, 28px);
-  margin: 28px 0 14px;
-}
-
-h3 {
-  font-size: 19px;
-}
-
-p {
-  color: #c6c9dd;
-  line-height: 1.7;
-}
-
-button {
-  padding: 15px 26px;
-  margin: 8px;
-  background: #806bff;
-  color: #fff;
-  border: 0;
-  border-radius: 30px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background: #a493ff;
-}
-
-button:focus-visible,
-input:focus-visible,
-summary:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
-}
-
-.eyebrow {
-  color: #a493ff;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.options {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 28px;
-}
-
-.options button {
-  margin: 0;
-}
-
-.progress-container,
-.score-bar {
-  width: 100%;
-  background: #30364d;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.progress-container {
-  height: 9px;
-  margin: 25px 0;
-}
-
-.progress-fill {
-  height: 100%;
-  background: #a493ff;
-}
-
-.scores {
-  max-width: 760px;
-  margin: 24px auto 36px;
-}
-
-.score-card {
-  text-align: left;
-  margin: 22px 0;
-}
-
-.score-label {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.score-bar {
-  height: 13px;
-}
-
-.score-fill {
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    #806bff,
-    #b5a4ff
-  );
-}
-
-.portrait-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
-  margin: 26px 0;
-}
-
-.portrait-card {
-  padding: 20px;
-  border: 1px solid #414766;
-  border-radius: 18px;
-  background: #171c30;
-  min-width: 0;
-}
-
-.portrait-card p {
-  font-size: 14px;
-}
-
-canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-width: 500px;
-  margin: 16px auto;
-  border: 1px solid #414766;
-  border-radius: 14px;
-}
-
-.panel {
-  max-width: 760px;
-  margin: 35px auto;
-  padding: 24px;
-  border: 1px solid #414766;
-  border-radius: 18px;
-  background: #1d2339;
-  text-align: left;
-}
-
-.control-row {
-  margin: 22px 0;
-}
-
-.control-row label {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.control-row input {
-  width: 100%;
-  accent-color: #a493ff;
-}
-
-.hint,
-.small {
-  font-size: 13px;
-}
-
-.secondary {
-  background: #383f60;
-}
-
-.rule {
-  padding: 14px 0;
-  border-bottom: 1px solid #414766;
-}
-
-.rule:last-child {
-  border-bottom: 0;
-}
-
-.rule strong {
-  color: #d3caff;
-}
-
-.rule p {
-  margin: 5px 0;
-  font-size: 14px;
-}
-
-.delta {
-  color: #b5a4ff;
-  font-weight: bold;
-}
-
-.muted {
-  color: #aeb3cc;
-}
-
-details {
-  margin: 14px 0;
-  padding: 14px;
-  border: 1px solid #414766;
-  border-radius: 10px;
-}
-
-summary {
-  cursor: pointer;
-  font-weight: bold;
-}
-
-ul {
-  color: #c6c9dd;
-  line-height: 1.8;
-  padding-left: 24px;
-}
-
-.error {
-  color: #ffb3bd;
-}
-
-@media (max-width: 680px) {
-  main {
-    padding: 34px 18px;
-  }
-
-  .options {
-    flex-direction: column;
-  }
-
-  .options button {
-    width: 100%;
-  }
-
-  .portrait-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .portrait-card,
-  .panel {
-    padding: 16px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-  }
+@media(prefers-reduced-motion:reduce){
+*{transition:none!important}
 }
 </style>
 </head>
-
 <body>
 
 <main id="app">
-  <p class="eyebrow">
-    Interactive Digital Identity Lab
-  </p>
-
-  <h1>WHO AM I ONLINE?</h1>
-
-  <h2>You are more than your data.</h2>
-
-  <p>
-    An interactive exploration of digital identity,
-    datafication and algorithmic representation.
-  </p>
-
-  <button id="startButton" type="button">
-    Start Your Digital Identity Experiment
-  </button>
-
-  <p>
-    Discover how a simple algorithm can transform
-    your online behaviours into a digital identity.
-  </p>
+<p class="eyebrow">Interactive Digital Identity Lab</p>
+<h1>WHO AM I ONLINE?</h1>
+<h2>You are more than your data.</h2>
+<p>An interactive exploration of digital identity, datafication and algorithmic representation.</p>
+<button id="startButton">Start Your Digital Identity Experiment</button>
+<p>Discover how a simple algorithm can transform your online behaviours into a digital identity.</p>
 </main>
 
 <script src="portrait.js"></script>
-
 <script>
 'use strict';
 
-// ========================================
-// 1. QUESTIONNAIRE AND EXPLICIT RULES
-// ========================================
-
-// These mappings are subjective artistic
-// decisions, not psychological measurements.
+// 1. QUESTIONNAIRE AND ARTISTIC SCORING RULES
 
 const questions = [
-  {
-    question: 'How do you usually use social media?',
-    options: [
-      {
-        text: 'Sharing my life',
-        effect: {
-          visibility: 25,
-          interaction: 5
-        }
-      },
-      {
-        text: 'Browsing content',
-        effect: {
-          visibility: -10,
-          interaction: -5
-        }
-      },
-      {
-        text: 'Communicating with friends',
-        effect: {
-          visibility: 5,
-          interaction: 25
-        }
-      },
-      {
-        text: 'Finding information',
-        effect: {
-          visibility: -5,
-          interaction: 5
-        }
-      }
-    ]
-  },
-
-  {
-    question: 'How do you prefer to express yourself online?',
-    options: [
-      {
-        text: 'Photos and videos',
-        effect: {
-          expression: 25,
-          visibility: 10
-        }
-      },
-      {
-        text: 'Written posts',
-        effect: {
-          expression: 20
-        }
-      },
-      {
-        text: 'Emojis and reactions',
-        effect: {
-          expression: 10,
-          interaction: 10
-        }
-      },
-      {
-        text: 'I rarely post',
-        effect: {
-          expression: -20,
-          visibility: -10
-        }
-      }
-    ]
-  },
-
-  {
-    question: 'How important is online privacy to you?',
-    options: [
-      {
-        text: 'Extremely important',
-        effect: {
-          privacy: 30
-        }
-      },
-      {
-        text: 'Very important',
-        effect: {
-          privacy: 20
-        }
-      },
-      {
-        text: 'Somewhat important',
-        effect: {
-          privacy: 5
-        }
-      },
-      {
-        text: 'Not very important',
-        effect: {
-          privacy: -25
-        }
-      }
-    ]
-  },
-
-  {
-    question: 'What do you usually share online?',
-    options: [
-      {
-        text: 'My everyday life',
-        effect: {
-          visibility: 20,
-          privacy: -15
-        }
-      },
-      {
-        text: 'Carefully selected moments',
-        effect: {
-          visibility: 10,
-          privacy: 10
-        }
-      },
-      {
-        text: 'My interests and hobbies',
-        effect: {
-          visibility: 10,
-          expression: 10
-        }
-      },
-      {
-        text: 'Very little personal information',
-        effect: {
-          visibility: -20,
-          privacy: 20
-        }
-      }
-    ]
-  },
-
-  {
-    question: 'How should online platforms understand you?',
-    options: [
-      {
-        text: 'Through my interests',
-        effect: {
-          interaction: 10
-        }
-      },
-      {
-        text: 'Through my online interactions',
-        effect: {
-          interaction: 20
-        }
-      },
-      {
-        text: 'I want to decide myself',
-        effect: {
-          privacy: 10
-        }
-      },
-      {
-        text: 'I prefer not to be categorised',
-        effect: {
-          privacy: 20
-        }
-      }
-    ]
-  }
+{
+question:"How do you usually use social media?",
+options:[
+{text:"Sharing my life",effect:{visibility:25,interaction:5}},
+{text:"Browsing content",effect:{visibility:-10,interaction:-5}},
+{text:"Communicating with friends",effect:{visibility:5,interaction:25}},
+{text:"Finding information",effect:{visibility:-5,interaction:5}}
+]
+},
+{
+question:"How do you prefer to express yourself online?",
+options:[
+{text:"Photos and videos",effect:{expression:25,visibility:10}},
+{text:"Written posts",effect:{expression:20}},
+{text:"Emojis and reactions",effect:{expression:10,interaction:10}},
+{text:"I rarely post",effect:{expression:-20,visibility:-10}}
+]
+},
+{
+question:"How important is online privacy to you?",
+options:[
+{text:"Extremely important",effect:{privacy:30}},
+{text:"Very important",effect:{privacy:20}},
+{text:"Somewhat important",effect:{privacy:5}},
+{text:"Not very important",effect:{privacy:-25}}
+]
+},
+{
+question:"What do you usually share online?",
+options:[
+{text:"My everyday life",effect:{visibility:20,privacy:-15}},
+{text:"Carefully selected moments",effect:{visibility:10,privacy:10}},
+{text:"My interests and hobbies",effect:{visibility:10,expression:10}},
+{text:"Very little personal information",effect:{visibility:-20,privacy:20}}
+]
+},
+{
+question:"How should online platforms understand you?",
+options:[
+{text:"Through my interests",effect:{interaction:10}},
+{text:"Through my online interactions",effect:{interaction:20}},
+{text:"I want to decide myself",effect:{privacy:10}},
+{text:"I prefer not to be categorised",effect:{privacy:20}}
+]
+}
 ];
 
-const labels = {
-  visibility: 'Visibility',
-  expression: 'Expression',
-  privacy: 'Privacy',
-  interaction: 'Interaction'
+const labels={
+visibility:"Visibility",
+expression:"Expression",
+privacy:"Privacy",
+interaction:"Interaction"
 };
 
-const hints = {
-  visibility: 'Particle brightness and opacity.',
-  expression: 'Number and density of particles.',
-  privacy: 'Visual masking and concealment.',
-  interaction: 'Particle movement speed.'
+const hints={
+visibility:"Particle brightness and opacity.",
+expression:"Number and density of particles.",
+privacy:"Visual masking and concealment.",
+interaction:"Particle movement speed."
 };
 
-const app = document.getElementById('app');
+const app=document.getElementById("app");
+let currentQuestion=0;
+let answers=[];
+let portraits=[];
 
-let currentQuestion = 0;
-let answers = [];
-let portraits = [];
+document.getElementById("startButton").addEventListener("click",startQuiz);
 
-document.getElementById('startButton')
-  .addEventListener('click', startQuiz);
-
-
-// ========================================
-// 2. HELPER FUNCTIONS
-// ========================================
-
-function node(tag, text, className) {
-  const el = document.createElement(tag);
-
-  if (text !== undefined) {
-    el.textContent = text;
-  }
-
-  if (className) {
-    el.className = className;
-  }
-
-  return el;
+function make(tag,text,className){
+const el=document.createElement(tag);
+if(text!==undefined)el.textContent=text;
+if(className)el.className=className;
+return el;
 }
 
-function clearPortraits() {
-  portraits.forEach(portrait => portrait.stop());
-  portraits = [];
+function clearPortraits(){
+portraits.forEach(p=>p.stop());
+portraits=[];
 }
 
-function startQuiz() {
-  clearPortraits();
-
-  currentQuestion = 0;
-  answers = [];
-
-  showQuestion();
+function startQuiz(){
+clearPortraits();
+currentQuestion=0;
+answers=[];
+showQuestion();
 }
 
+// 2. SHOW FIVE QUESTIONS
 
-// ========================================
-// 3. DISPLAY QUESTIONNAIRE
-// ========================================
+function showQuestion(){
+app.replaceChildren();
+const q=questions[currentQuestion];
 
-function showQuestion() {
-  app.replaceChildren();
+const progress=make("div",undefined,"progress-container");
+const fill=make("div",undefined,"progress-fill");
+fill.style.width=(currentQuestion/questions.length*100)+"%";
+progress.append(fill);
 
-  const q = questions[currentQuestion];
+const options=make("div",undefined,"options");
 
-  const progress = node(
-    'div',
-    undefined,
-    'progress-container'
-  );
+q.options.forEach((choice,index)=>{
+const button=make("button",choice.text);
+button.type="button";
 
-  const fill = node(
-    'div',
-    undefined,
-    'progress-fill'
-  );
+button.addEventListener("click",()=>{
+answers.push({
+question:q.question,
+selectedOption:choice.text,
+selectedIndex:index,
+effect:{...choice.effect}
+});
 
-  fill.style.width =
-    `${currentQuestion / questions.length * 100}%`;
+currentQuestion++;
 
-  progress.append(fill);
+if(currentQuestion<questions.length){
+showQuestion();
+}else{
+showResults();
+}
+});
 
-  const options = node(
-    'div',
-    undefined,
-    'options'
-  );
+options.append(button);
+});
 
-  q.options.forEach((choice, index) => {
-    const button = node(
-      'button',
-      choice.text
-    );
-
-    button.type = 'button';
-
-    button.addEventListener('click', () => {
-      answers.push({
-        question: q.question,
-        selectedOption: choice.text,
-        selectedIndex: index,
-        effect: { ...choice.effect }
-      });
-
-      currentQuestion++;
-
-      if (currentQuestion < questions.length) {
-        showQuestion();
-      } else {
-        showResults();
-      }
-    });
-
-    options.append(button);
-  });
-
-  app.append(
-    node(
-      'p',
-      'Digital Identity Experiment',
-      'eyebrow'
-    ),
-    node(
-      'h1',
-      'Digital Identity Questionnaire'
-    ),
-    node(
-      'h2',
-      `Question ${currentQuestion + 1} of ${questions.length}`
-    ),
-    progress,
-    node('p', q.question),
-    options
-  );
+app.append(
+make("p","Digital Identity Experiment","eyebrow"),
+make("h1","Digital Identity Questionnaire"),
+make("h2",`Question ${currentQuestion+1} of ${questions.length}`),
+progress,
+make("p",q.question),
+options
+);
 }
 
+// 3. TRANSPARENT IDENTITY MAPPING
 
-// ========================================
-// 4. IDENTITY MAPPING ALGORITHM
-// ========================================
+function calculateIdentity(responses){
+const scores={
+visibility:50,
+expression:50,
+privacy:50,
+interaction:50
+};
 
-function calculateIdentity(responses) {
-  const scores = {
-    visibility: 50,
-    expression: 50,
-    privacy: 50,
-    interaction: 50
-  };
+responses.forEach(answer=>{
+Object.entries(answer.effect).forEach(([key,amount])=>{
+scores[key]+=amount;
+});
+});
 
-  responses.forEach(answer => {
-    Object.entries(answer.effect).forEach(
-      ([key, amount]) => {
-        scores[key] += amount;
-      }
-    );
-  });
+Object.keys(scores).forEach(key=>{
+scores[key]=Math.max(0,Math.min(100,Math.round(scores[key])));
+});
 
-  Object.keys(scores).forEach(key => {
-    scores[key] = Math.max(
-      0,
-      Math.min(
-        100,
-        Math.round(scores[key])
-      )
-    );
-  });
-
-  return scores;
+return scores;
 }
 
+// 4. PORTRAIT CARD
 
-// ========================================
-// 5. GENERATIVE PORTRAIT CARD
-// ========================================
+function portraitCard(title,description,identity,filename){
+const card=make("article",undefined,"portrait-card");
 
-function makePortraitCard(
-  title,
-  description,
-  identity,
-  filename
-) {
-  const card = node(
-    'article',
-    undefined,
-    'portrait-card'
-  );
+card.append(
+make("h3",title),
+make("p",description)
+);
 
-  card.append(
-    node('h3', title),
-    node('p', description)
-  );
+const portrait=typeof window.createPortrait==="function"
+?window.createPortrait(identity,{
+label:title+": generative particle portrait"
+})
+:null;
 
-  const portrait =
-    typeof window.createPortrait === 'function'
-      ? window.createPortrait(identity, {
-          label: title +
-            ': generative particle portrait'
-        })
-      : null;
-
-  if (!portrait) {
-    card.append(
-      node(
-        'p',
-        'Portrait unavailable. Please check portrait.js.',
-        'error'
-      )
-    );
-
-    return {
-      card,
-      portrait: null
-    };
-  }
-
-  portraits.push(portrait);
-
-  card.append(portrait.canvas);
-
-  const download = node(
-    'button',
-    'Download Portrait'
-  );
-
-  download.type = 'button';
-
-  download.addEventListener('click', () => {
-    portrait.download(filename);
-  });
-
-  card.append(download);
-
-  return {
-    card,
-    portrait
-  };
+if(!portrait){
+card.append(make("p","Portrait unavailable. Check portrait.js.","error"));
+return {card,portrait:null};
 }
 
+portraits.push(portrait);
+card.append(portrait.canvas);
+
+const download=make("button","Download Portrait");
+download.type="button";
+download.addEventListener("click",()=>portrait.download(filename));
+
+card.append(download);
+return {card,portrait};
+}
 
-// ========================================
-// 6. DISPLAY RESULTS
-// ========================================
-
-function showResults() {
-  clearPortraits();
-
-  const original = calculateIdentity(answers);
-  const modified = { ...original };
-
-  app.replaceChildren();
-
-  app.append(
-    node(
-      'p',
-      'Algorithmic Identity Profile',
-      'eyebrow'
-    ),
-    node('h1', 'Your Digital Identity'),
-    node(
-      'p',
-      'This is how our algorithm interprets your answers.'
-    )
-  );
-
-  // Display original identity scores.
-
-  const scores = node(
-    'section',
-    undefined,
-    'scores'
-  );
-
-  scores.setAttribute(
-    'aria-label',
-    'Original identity scores'
-  );
-
-  Object.entries(original).forEach(
-    ([key, value]) => {
-      const card = node(
-        'div',
-        undefined,
-        'score-card'
-      );
-
-      const label = node(
-        'div',
-        undefined,
-        'score-label'
-      );
-
-      const bar = node(
-        'div',
-        undefined,
-        'score-bar'
-      );
-
-      const fill = node(
-        'div',
-        undefined,
-        'score-fill'
-      );
-
-      label.append(
-        node('span', labels[key]),
-        node('span', `${value}/100`)
-      );
-
-      fill.style.width = `${value}%`;
-
-      bar.append(fill);
-      card.append(label, bar);
-      scores.append(card);
-    }
-  );
-
-  app.append(scores);
-
-
-  // ======================================
-  // 7. ORIGINAL AND MODIFIED PORTRAITS
-  // ======================================
-
-  app.append(
-    node(
-      'h2',
-      'Compare Your Algorithmic Portraits'
-    ),
-    node(
-      'p',
-      'The left portrait preserves the original classification. The right portrait responds to your changes.'
-    )
-  );
-
-  const grid = node(
-    'section',
-    undefined,
-    'portrait-grid'
-  );
-
-  const left = makePortraitCard(
-    'Original Portrait',
-    'Based on your five questionnaire answers.',
-    original,
-    'original-digital-identity.png'
-  );
-
-  const right = makePortraitCard(
-    'Modified Portrait',
-    'Changes as you adjust the controls below.',
-    modified,
-    'modified-digital-identity.png'
-  );
-
-  grid.append(left.card, right.card);
-  app.append(grid);
-
-
-  // ======================================
-  // 8. CHANGE THE ALGORITHM
-  // ======================================
-
-  const controls = node(
-    'section',
-    undefined,
-    'panel'
-  );
-
-  controls.append(
-    node('h2', 'Change the Algorithm'),
-    node(
-      'p',
-      'Adjust the assigned scores and see how the portrait changes. The person has not changed—only the representation has.'
-    )
-  );
-
-  const sliders = {};
-
-  Object.keys(original).forEach(key => {
-    const row = node(
-      'div',
-      undefined,
-      'control-row'
-    );
-
-    const label = node('label');
-
-    const value = node(
-      'output',
-      `${modified[key]}/100`
-    );
-
-    const slider = document.createElement('input');
-
-    slider.type = 'range';
-    slider.min = '0';
-    slider.max = '100';
-    slider.step = '1';
-    slider.value = modified[key];
-    slider.id = `control-${key}`;
-
-    label.htmlFor = slider.id;
-
-    label.append(
-      node('span', labels[key]),
-      value
-    );
-
-    slider.addEventListener('input', () => {
-      modified[key] = Number(slider.value);
-
-      value.textContent =
-        `${modified[key]}/100`;
-
-      if (right.portrait) {
-        right.portrait.update(modified);
-      }
-    });
-
-    row.append(
-      label,
-      slider,
-      node('p', hints[key], 'hint')
-    );
-
-    controls.append(row);
-
-    sliders[key] = {
-      slider,
-      value
-    };
-  });
-
-  const reset = node(
-    'button',
-    'Reset Algorithm',
-    'secondary'
-  );
-
-  reset.type = 'button';
-
-  reset.addEventListener('click', () => {
-    Object.keys(original).forEach(key => {
-      modified[key] = original[key];
-
-      sliders[key].slider.value =
-        original[key];
-
-      sliders[key].value.textContent =
-        `${original[key]}/100`;
-    });
-
-    if (right.portrait) {
-      right.portrait.update(modified);
-    }
-  });
-
-  controls.append(reset);
-  app.append(controls);
-
-
-  // ======================================
-  // 9. ALGORITHM TRANSPARENCY
-  // ======================================
-
-  const transparency = node(
-    'section',
-    undefined,
-    'panel'
-  );
-
-  transparency.append(
-    node(
-      'h2',
-      'How Does the Algorithm Work?'
-    ),
-    node(
-      'p',
-      'Every score begins at 50/100. Each selected answer adds or subtracts points from particular dimensions. The final score is limited to the range 0–100. These rules were written by the project designer; they are not a validated measure of personality.'
-    )
-  );
-
-  // Show the user's own answers and
-  // the exact rules applied to them.
-
-  const detail = document.createElement('details');
-
-  detail.open = true;
-
-  detail.append(
-    node(
-      'summary',
-      'Your Data, Our Assumptions — view your five answers'
-    )
-  );
-
-  answers.forEach((answer, i) => {
-    const item = node(
-      'div',
-      undefined,
-      'rule'
-    );
-
-    item.append(
-      node(
-        'strong',
-        `Question ${i + 1}: ${answer.question}`
-      ),
-      node(
-        'p',
-        `Your answer: ${answer.selectedOption}`
-      )
-    );
-
-    const changes = Object.entries(
-      answer.effect
-    ).map(([key, amount]) => {
-      const sign = amount > 0 ? '+' : '';
-
-      return `${labels[key]} ${sign}${amount}`;
-    }).join(' · ');
-
-    item.append(
-      node(
-        'p',
-        `Rule applied: ${changes}`,
-        'delta'
-      )
-    );
-
-    detail.append(item);
-  });
-
-  transparency.append(detail);
-
-
-  // ======================================
-  // 10. EXPLORE ALL ALGORITHM RULES
-  // ======================================
-
-  const allRules = document.createElement('details');
-
-  allRules.append(
-    node(
-      'summary',
-      'Explore all answer-to-score rules'
-    )
-  );
-
-  questions.forEach((q, i) => {
-    const group = node(
-      'div',
-      undefined,
-      'rule'
-    );
-
-    group.append(
-      node(
-        'strong',
-        `Question ${i + 1}: ${q.question}`
-      )
-    );
-
-    q.options.forEach(option => {
-      const changes = Object.entries(
-        option.effect
-      ).map(([key, amount]) => {
-        const sign = amount > 0 ? '+' : '';
-
-        return `${labels[key]} ${sign}${amount}`;
-      }).join(', ');
-
-      group.append(
-        node(
-          'p',
-          `${option.text} → ${changes}`
-        )
-      );
-    });
-
-    allRules.append(group);
-  });
-
-  transparency.append(allRules);
-
-  transparency.append(
-    node(
-      'p',
-      'Important limitation: scores may reach 0 or 100 because values are capped. An answer can influence more than one dimension, and a different designer could choose different weights. The four dimensions are invented for this artwork, not discovered facts about you.',
-      'small'
-    )
-  );
-
-  app.append(transparency);
-
-
-  // ======================================
-  // 11. CRITICAL REFLECTION
-  // ======================================
-
-  const reflection = node(
-    'section',
-    undefined,
-    'panel'
-  );
-
-  reflection.append(
-    node(
-      'h2',
-      'Who Controls Your Digital Identity?'
-    ),
-
-    node(
-      'p',
-      'Your answers did not change when you moved the sliders, but the digital portrait did. What does this suggest about the power of people who design classification systems?'
-    ),
-
-    node(
-      'p',
-      'Consider: Which behaviours did this questionnaire ignore? Why should posting photos count as “expression”? Does a preference for privacy tell a platform who you are? Could another set of rules produce a very different portrait?'
-    ),
-
-    node(
-      'p',
-      'This is a creative demonstration of datafication and algorithmic representation—not a diagnostic tool or a real platform profiling system.'
-    ),
-
-    node(
-      'p',
-      'Privacy: answers and portraits remain in your browser. The site does not transmit questionnaire responses to a server.',
-      'small'
-    )
-  );
-
-  app.append(reflection);
-
-
-  // ======================================
-  // 12. START AGAIN
-  // ======================================
-
-  const restart = node(
-    'button',
-    'Start Again'
-  );
-
-  restart.type = 'button';
-
-  restart.addEventListener('click', startQuiz);
-
-  app.append(restart);
+// 5. RESULTS
+
+function showResults(){
+clearPortraits();
+
+const original=calculateIdentity(answers);
+const modified={...original};
+
+app.replaceChildren();
+
+app.append(
+make("p","Algorithmic Identity Profile","eyebrow"),
+make("h1","Your Digital Identity"),
+make("p","This is how our algorithm interprets your answers.")
+);
+
+const scores=make("section",undefined,"scores");
+
+Object.entries(original).forEach(([key,value])=>{
+const card=make("div",undefined,"score-card");
+const label=make("div",undefined,"score-label");
+const bar=make("div",undefined,"score-bar");
+const fill=make("div",undefined,"score-fill");
+
+label.append(make("span",labels[key]),make("span",value+"/100"));
+fill.style.width=value+"%";
+bar.append(fill);
+card.append(label,bar);
+scores.append(card);
+});
+
+app.append(scores);
+
+// 6. ORIGINAL VS MODIFIED PORTRAITS
+
+app.append(
+make("h2","Compare Your Algorithmic Portraits"),
+make("p","The left portrait preserves the original classification. The right portrait responds to your changes.")
+);
+
+const grid=make("section",undefined,"portrait-grid");
+
+const left=portraitCard(
+"Original Portrait",
+"Based on your five questionnaire answers.",
+original,
+"original-digital-identity.png"
+);
+
+const right=portraitCard(
+"Modified Portrait",
+"Changes as you adjust the controls below.",
+modified,
+"modified-digital-identity.png"
+);
+
+grid.append(left.card,right.card);
+app.append(grid);
+
+// 7. CHANGE THE ALGORITHM
+
+const controls=make("section",undefined,"panel");
+
+controls.append(
+make("h2","Change the Algorithm"),
+make("p","Adjust the assigned scores. The person has not changed—only the representation has.")
+);
+
+const sliders={};
+
+Object.keys(original).forEach(key=>{
+const row=make("div",undefined,"control-row");
+const label=make("label");
+const value=make("output",modified[key]+"/100");
+const slider=document.createElement("input");
+
+slider.type="range";
+slider.min="0";
+slider.max="100";
+slider.step="1";
+slider.value=String(modified[key]);
+slider.id="control-"+key;
+label.htmlFor=slider.id;
+
+label.append(make("span",labels[key]),value);
+
+slider.addEventListener("input",()=>{
+modified[key]=Number(slider.value);
+value.textContent=modified[key]+"/100";
+if(right.portrait)right.portrait.update(modified);
+});
+
+row.append(label,slider,make("p",hints[key],"small"));
+controls.append(row);
+sliders[key]={slider,value};
+});
+
+const reset=make("button","Reset Algorithm","secondary");
+
+reset.addEventListener("click",()=>{
+Object.keys(original).forEach(key=>{
+modified[key]=original[key];
+sliders[key].slider.value=String(original[key]);
+sliders[key].value.textContent=original[key]+"/100";
+});
+if(right.portrait)right.portrait.update(modified);
+});
+
+controls.append(reset);
+app.append(controls);
+
+// 8. ALGORITHM TRANSPARENCY
+
+const transparency=make("section",undefined,"panel");
+
+transparency.append(
+make("h2","How Does the Algorithm Work?"),
+make("p","Every score begins at 50/100. Each answer adds or subtracts points. Final scores are limited to 0–100. These rules are artistic design choices, not scientifically validated personality measurements.")
+);
+
+const details=document.createElement("details");
+details.open=true;
+details.append(make("summary","Your Data, Our Assumptions — view your five answers"));
+
+answers.forEach((answer,i)=>{
+const item=make("div",undefined,"rule");
+const changes=Object.entries(answer.effect)
+.map(([key,amount])=>labels[key]+" "+(amount>0?"+":"")+amount)
+.join(" · ");
+
+item.append(
+make("strong",`Question ${i+1}: ${answer.question}`),
+make("p","Your answer: "+answer.selectedOption),
+make("p","Rule applied: "+changes,"delta")
+);
+
+details.append(item);
+});
+
+transparency.append(details);
+
+const allRules=document.createElement("details");
+allRules.append(make("summary","Explore all answer-to-score rules"));
+
+questions.forEach((q,i)=>{
+const group=make("div",undefined,"rule");
+group.append(make("strong",`Question ${i+1}: ${q.question}`));
+
+q.options.forEach(option=>{
+const changes=Object.entries(option.effect)
+.map(([key,amount])=>labels[key]+" "+(amount>0?"+":"")+amount)
+.join(", ");
+
+group.append(make("p",option.text+" → "+changes));
+});
+
+allRules.append(group);
+});
+
+transparency.append(
+allRules,
+make("p","A different designer could choose different questions, categories or weights. These scores are constructed representations, not discovered facts about a person.","small")
+);
+
+app.append(transparency);
+
+// 9. CRITICAL REFLECTION
+
+const reflection=make("section",undefined,"panel");
+
+reflection.append(
+make("h2","Who Controls Your Digital Identity?"),
+make("p","Your answers did not change when you moved the sliders, but your digital portrait did. What does this reveal about the power of people who design classification systems?"),
+make("p","Which behaviours did the questionnaire ignore? Why should posting photos count as expression? Can a privacy preference define a person's identity?"),
+make("p","This is a creative demonstration of datafication, not a psychological test or a real platform profiling system."),
+make("p","Privacy: questionnaire responses and portraits are processed locally in your browser and are not sent to a server.","small")
+);
+
+app.append(reflection);
+
+// 10. ACADEMIC CONTEXT
+
+const academic=make("section",undefined,"panel");
+
+academic.append(
+make("p","Research and Critical Media Theory","eyebrow"),
+make("h2","Academic Context & Critical Reflection"),
+make("p","This artwork draws on research about identity, platforms, data and algorithmic power. The scholars below provide critical perspectives; they do not validate the questionnaire's artistic scores.")
+);
+
+function theory(title,explanation,connection){
+const card=make("article",undefined,"theory-card");
+
+card.append(
+make("h3",title),
+make("p",explanation),
+make("p","Connection to this project: "+connection)
+);
+
+academic.append(card);
+}
+
+theory(
+"Erving Goffman — Self-Presentation",
+"Goffman examined how people manage impressions of themselves in social situations. His work predates social media, so applying it to online profiles is an interpretation.",
+"The questionnaire captures only selected online behaviours. People may present themselves differently across audiences and contexts."
+);
+
+theory(
+"José van Dijck — Platform Culture",
+"Van Dijck examines how social media platforms shape social connections through technical and economic structures.",
+"The questionnaire reduces varied online practices to fixed categories, encouraging users to ask what platforms choose to measure."
+);
+
+theory(
+"Rob Kitchin — Datafication and Algorithms",
+"Kitchin explores the social implications of data-driven systems and the political dimensions of data and algorithms.",
+"Five answers are transformed into four scores and then into an image. The visible scoring rules expose this process of simplification."
+);
+
+theory(
+"Safiya Umoja Noble — Algorithmic Power",
+"Noble demonstrates how search technologies can reproduce social inequalities rather than function as neutral systems.",
+"The sliders show how outputs depend on design decisions. This artwork does not model discrimination, but encourages critical questions about algorithmic neutrality."
+);
+
+// 11. REFERENCES
+
+academic.append(make("h3","References"));
+
+const references=make("ol",undefined,"references");
+
+function reference(text,url){
+const item=make("li");
+item.append(document.createTextNode(text+" "));
+
+const link=make("a","Book information");
+link.href=url;
+link.target="_blank";
+link.rel="noopener noreferrer";
+
+item.append(link);
+references.append(item);
+}
+
+reference(
+"Goffman, E. (1959). The Presentation of Self in Everyday Life. Doubleday.",
+"https://books.google.com/books?q=Erving+Goffman+The+Presentation+of+Self+in+Everyday+Life"
+);
+
+reference(
+"van Dijck, J. (2013). The Culture of Connectivity: A Critical History of Social Media. Oxford University Press.",
+"https://global.oup.com/academic/product/the-culture-of-connectivity-9780199970780"
+);
+
+reference(
+"Kitchin, R. (2014). The Data Revolution: Big Data, Open Data, Data Infrastructures and Their Consequences. SAGE.",
+"https://books.google.com/books?q=Rob+Kitchin+The+Data+Revolution+2014"
+);
+
+reference(
+"Noble, S. U. (2018). Algorithms of Oppression: How Search Engines Reinforce Racism. NYU Press.",
+"https://nyupress.org/9781479837243/algorithms-of-oppression/"
+);
+
+academic.append(
+references,
+make("p","Critical question: If another developer selected different questions and weights, would the same person receive a different digital identity?","small")
+);
+
+app.append(academic);
+
+// 12. START AGAIN
+
+const restart=make("button","Start Again");
+restart.addEventListener("click",startQuiz);
+app.append(restart);
+
 }
 </script>
-
 </body>
 </html>
+
