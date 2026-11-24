@@ -145,6 +145,20 @@
       font-weight: bold;
     }
 
+    .portrait-container {
+      margin: 35px auto;
+      text-align: center;
+    }
+
+    .portrait-container canvas {
+      display: block;
+      margin: 20px auto;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #414766;
+      border-radius: 20px;
+    }
+
     @media (max-width: 600px) {
       main {
         padding: 30px 18px;
@@ -189,6 +203,8 @@
       your online behaviours into a digital identity.
     </p>
   </main>
+
+  <script src="portrait.js"></script>
 
   <script>
     // -----------------------------------------
@@ -245,6 +261,7 @@
 
     let currentQuestion = 0;
     let answers = [];
+    let activePortrait = null;
 
     const app = document.getElementById("app");
 
@@ -261,6 +278,11 @@
     // -----------------------------------------
 
     function showQuestion() {
+      if (activePortrait) {
+        activePortrait.stop();
+        activePortrait = null;
+      }
+
       const question = questions[currentQuestion];
 
       app.replaceChildren();
@@ -388,6 +410,11 @@
     // -----------------------------------------
 
     function showResults() {
+      if (activePortrait) {
+        activePortrait.stop();
+        activePortrait = null;
+      }
+
       const identity = calculateIdentity(answers);
 
       app.replaceChildren();
@@ -439,6 +466,59 @@
         app.appendChild(card);
       });
 
+
+      // -----------------------------------------
+      // 5. GENERATIVE DIGITAL PORTRAIT
+      // -----------------------------------------
+
+      const portraitSection = document.createElement("section");
+      portraitSection.className = "portrait-container";
+
+      const portraitTitle = document.createElement("h2");
+      portraitTitle.textContent = "Your Algorithmic Portrait";
+
+      const portraitDescription = document.createElement("p");
+      portraitDescription.textContent =
+        "This artwork is generated from your identity " +
+        "parameters using JavaScript Canvas.";
+
+      portraitSection.append(
+        portraitTitle,
+        portraitDescription
+      );
+
+      if (typeof createPortrait === "function") {
+        const portrait = createPortrait(identity);
+
+        if (portrait) {
+          activePortrait = portrait;
+
+          portraitSection.appendChild(portrait.canvas);
+
+          const downloadButton = document.createElement("button");
+          downloadButton.type = "button";
+          downloadButton.textContent = "Download Portrait";
+
+          downloadButton.addEventListener("click", function() {
+            portrait.download();
+          });
+
+          portraitSection.appendChild(downloadButton);
+        }
+      } else {
+        const errorMessage = document.createElement("p");
+        errorMessage.textContent =
+          "Portrait unavailable. Please check portrait.js.";
+        portraitSection.appendChild(errorMessage);
+      }
+
+      app.appendChild(portraitSection);
+
+
+      // -----------------------------------------
+      // 6. CRITICAL REFLECTION
+      // -----------------------------------------
+
       const note = document.createElement("div");
       note.className = "note";
 
@@ -447,8 +527,8 @@
 
       const noteText = document.createElement("p");
       noteText.textContent =
-        "These scores are artistic interpretations, " +
-        "not scientific measurements. " +
+        "These scores and visual forms are artistic " +
+        "interpretations, not scientific measurements. " +
         "Our algorithm converts a limited number of " +
         "answers into numerical categories. " +
         "Different rules could produce different results. " +
@@ -462,6 +542,11 @@
       restartButton.textContent = "Start Again";
 
       restartButton.addEventListener("click", function() {
+        if (activePortrait) {
+          activePortrait.stop();
+          activePortrait = null;
+        }
+
         currentQuestion = 0;
         answers = [];
         showQuestion();
@@ -475,3 +560,5 @@
   </script>
 </body>
 </html>
+
+     
