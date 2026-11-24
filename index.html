@@ -1,46 +1,43 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta name="description" content="Explore how algorithmic rules turn online behaviours into a digital identity through creative coding.">
   <title>Who Am I Online? | Digital Identity Lab</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
       background: #101426;
-      color: white;
+      color: #fff;
       font-family: Arial, Helvetica, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       text-align: center;
     }
 
     main {
       width: 100%;
-      max-width: 760px;
-      padding: 40px 24px;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 64px 24px;
     }
 
     h1 {
       font-size: clamp(38px, 7vw, 68px);
       color: #b5a4ff;
       line-height: 1.15;
-      margin-bottom: 25px;
+      margin: 22px 0;
     }
 
     h2 {
-      font-size: 24px;
-      margin: 25px 0;
+      font-size: clamp(21px, 3vw, 28px);
+      margin: 25px 0 14px;
     }
+
+    h3 { font-size: 19px; margin: 10px 0; }
 
     p {
       color: #c6c9dd;
@@ -52,12 +49,12 @@
       padding: 15px 26px;
       margin: 8px;
       background: #806bff;
-      color: white;
+      color: #fff;
       border: none;
       border-radius: 30px;
       cursor: pointer;
       font-size: 16px;
-      transition: background 0.2s, transform 0.2s;
+      transition: background .2s, transform .2s;
     }
 
     button:hover {
@@ -65,76 +62,10 @@
       transform: translateY(-2px);
     }
 
-    button:focus-visible {
-      outline: 3px solid white;
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #fff;
       outline-offset: 4px;
-    }
-
-    .options {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .options button {
-      margin: 0;
-    }
-
-    .progress-container {
-      width: 100%;
-      height: 9px;
-      background: #30364d;
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 25px 0;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0;
-      background: #a493ff;
-      transition: width 0.3s;
-    }
-
-    .score-card {
-      text-align: left;
-      margin: 25px 0;
-    }
-
-    .score-label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 15px;
-    }
-
-    .score-bar {
-      height: 13px;
-      background: #30364d;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .score-fill {
-      height: 100%;
-      background: linear-gradient(
-        90deg,
-        #806bff,
-        #b5a4ff
-      );
-      border-radius: 10px;
-    }
-
-    .note {
-      margin: 35px 0 20px;
-      padding: 20px;
-      background: #1d2339;
-      border: 1px solid #414766;
-      border-radius: 14px;
-      font-size: 14px;
-      text-align: left;
     }
 
     .eyebrow {
@@ -145,36 +76,145 @@
       font-weight: bold;
     }
 
-    .portrait-container {
-      margin: 35px auto;
-      text-align: center;
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 28px;
     }
 
-    .portrait-container canvas {
-      display: block;
-      margin: 20px auto;
-      max-width: 100%;
-      height: auto;
+    .options button { margin: 0; }
+
+    .progress-container,
+    .score-bar {
+      width: 100%;
+      background: #30364d;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-container {
+      height: 9px;
+      margin: 25px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #a493ff;
+      transition: width .3s;
+    }
+
+    .scores {
+      max-width: 760px;
+      margin: 24px auto 36px;
+    }
+
+    .score-card {
+      text-align: left;
+      margin: 22px 0;
+    }
+
+    .score-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .score-bar { height: 13px; }
+
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #806bff, #b5a4ff);
+      border-radius: 10px;
+    }
+
+    .portrait-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin: 26px 0;
+    }
+
+    .portrait-card {
+      padding: 20px;
       border: 1px solid #414766;
-      border-radius: 20px;
+      border-radius: 18px;
+      background: #171c30;
+      min-width: 0;
     }
 
-    @media (max-width: 600px) {
-      main {
-        padding: 30px 18px;
-      }
+    .portrait-card p { font-size: 14px; }
 
-      .options {
-        flex-direction: column;
-      }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 500px;
+      margin: 16px auto;
+      border: 1px solid #414766;
+      border-radius: 14px;
+    }
 
-      .options button {
-        width: 100%;
-      }
+    .controls {
+      max-width: 760px;
+      margin: 35px auto;
+      padding: 24px;
+      border: 1px solid #414766;
+      border-radius: 18px;
+      background: #1d2339;
+      text-align: left;
+    }
+
+    .control-row { margin: 22px 0; }
+
+    .control-row label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .control-row input {
+      display: block;
+      width: 100%;
+      accent-color: #a493ff;
+      cursor: pointer;
+    }
+
+    .control-hint {
+      margin: 5px 0 0;
+      font-size: 13px;
+    }
+
+    .note {
+      max-width: 760px;
+      margin: 35px auto 20px;
+      padding: 20px;
+      background: #1d2339;
+      border: 1px solid #414766;
+      border-radius: 14px;
+      text-align: left;
+    }
+
+    .note p { font-size: 14px; }
+
+    .secondary { background: #383f60; }
+    .secondary:hover { background: #515a83; }
+    .small { font-size: 13px; }
+    .error { color: #ffb3bd; }
+
+    @media (max-width: 680px) {
+      main { padding: 34px 18px; }
+      .options { flex-direction: column; }
+      .options button { width: 100%; }
+      .portrait-grid { grid-template-columns: 1fr; }
+      .portrait-card, .controls { padding: 16px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      * {
+      *, *::before, *::after {
         transition: none !important;
       }
     }
@@ -194,7 +234,7 @@
       datafication and algorithmic representation.
     </p>
 
-    <button id="startButton">
+    <button id="startButton" type="button">
       Start Your Digital Identity Experiment
     </button>
 
@@ -207,119 +247,160 @@
   <script src="portrait.js"></script>
 
   <script>
-    // -----------------------------------------
-    // 1. QUESTIONNAIRE DATA
-    // -----------------------------------------
+    'use strict';
+
+    // ---------------------------------------
+    // 1. QUESTIONNAIRE
+    // ---------------------------------------
 
     const questions = [
       {
-        question: "How do you usually use social media?",
+        question: 'How do you usually use social media?',
         options: [
-          "Sharing my life",
-          "Browsing content",
-          "Communicating with friends",
-          "Finding information"
+          'Sharing my life',
+          'Browsing content',
+          'Communicating with friends',
+          'Finding information'
         ]
       },
       {
-        question: "How do you prefer to express yourself online?",
+        question: 'How do you prefer to express yourself online?',
         options: [
-          "Photos and videos",
-          "Written posts",
-          "Emojis and reactions",
-          "I rarely post"
+          'Photos and videos',
+          'Written posts',
+          'Emojis and reactions',
+          'I rarely post'
         ]
       },
       {
-        question: "How important is online privacy to you?",
+        question: 'How important is online privacy to you?',
         options: [
-          "Extremely important",
-          "Very important",
-          "Somewhat important",
-          "Not very important"
+          'Extremely important',
+          'Very important',
+          'Somewhat important',
+          'Not very important'
         ]
       },
       {
-        question: "What do you usually share online?",
+        question: 'What do you usually share online?',
         options: [
-          "My everyday life",
-          "Carefully selected moments",
-          "My interests and hobbies",
-          "Very little personal information"
+          'My everyday life',
+          'Carefully selected moments',
+          'My interests and hobbies',
+          'Very little personal information'
         ]
       },
       {
-        question: "How should online platforms understand you?",
+        question: 'How should online platforms understand you?',
         options: [
-          "Through my interests",
-          "Through my online interactions",
-          "I want to decide myself",
-          "I prefer not to be categorised"
+          'Through my interests',
+          'Through my online interactions',
+          'I want to decide myself',
+          'I prefer not to be categorised'
         ]
       }
     ];
 
+    const labels = {
+      visibility: 'Visibility',
+      expression: 'Expression',
+      privacy: 'Privacy',
+      interaction: 'Interaction'
+    };
+
+    const hints = {
+      visibility: 'Changes particle brightness and opacity.',
+      expression: 'Changes the number and density of particles.',
+      privacy: 'Changes how much of the portrait is obscured.',
+      interaction: 'Changes the speed of particle movement.'
+    };
+
+    const app = document.getElementById('app');
+
     let currentQuestion = 0;
     let answers = [];
-    let activePortrait = null;
+    let portraits = [];
 
-    const app = document.getElementById("app");
+    document.getElementById('startButton')
+      .addEventListener('click', startQuiz);
 
-    document.getElementById("startButton")
-      .addEventListener("click", function() {
-        currentQuestion = 0;
-        answers = [];
-        showQuestion();
-      });
+    function clearPortraits() {
+      portraits.forEach(portrait => portrait.stop());
+      portraits = [];
+    }
 
+    function startQuiz() {
+      clearPortraits();
+      currentQuestion = 0;
+      answers = [];
+      showQuestion();
+    }
 
-    // -----------------------------------------
-    // 2. DISPLAY QUESTION
-    // -----------------------------------------
+    function element(tag, text, className) {
+      const node = document.createElement(tag);
+
+      if (text !== undefined) {
+        node.textContent = text;
+      }
+
+      if (className) {
+        node.className = className;
+      }
+
+      return node;
+    }
 
     function showQuestion() {
-      if (activePortrait) {
-        activePortrait.stop();
-        activePortrait = null;
-      }
+      app.replaceChildren();
 
       const question = questions[currentQuestion];
 
-      app.replaceChildren();
+      const eyebrow = element(
+        'p',
+        'Digital Identity Experiment',
+        'eyebrow'
+      );
 
-      const eyebrow = document.createElement("p");
-      eyebrow.className = "eyebrow";
-      eyebrow.textContent = "Digital Identity Experiment";
+      const title = element(
+        'h1',
+        'Digital Identity Questionnaire'
+      );
 
-      const title = document.createElement("h1");
-      title.textContent = "Digital Identity Questionnaire";
+      const progressText = element(
+        'h2',
+        `Question ${currentQuestion + 1} of ${questions.length}`
+      );
 
-      const progressText = document.createElement("h2");
-      progressText.textContent =
-        `Question ${currentQuestion + 1} of ${questions.length}`;
+      const progressContainer = element(
+        'div',
+        undefined,
+        'progress-container'
+      );
 
-      const progressContainer = document.createElement("div");
-      progressContainer.className = "progress-container";
+      const progressFill = element(
+        'div',
+        undefined,
+        'progress-fill'
+      );
 
-      const progressFill = document.createElement("div");
-      progressFill.className = "progress-fill";
       progressFill.style.width =
         `${(currentQuestion / questions.length) * 100}%`;
 
       progressContainer.appendChild(progressFill);
 
-      const questionText = document.createElement("p");
-      questionText.textContent = question.question;
+      const questionText = element('p', question.question);
 
-      const optionsContainer = document.createElement("div");
-      optionsContainer.className = "options";
+      const optionsContainer = element(
+        'div',
+        undefined,
+        'options'
+      );
 
-      question.options.forEach(function(option, index) {
-        const optionButton = document.createElement("button");
-        optionButton.type = "button";
-        optionButton.textContent = option;
+      question.options.forEach((option, index) => {
+        const button = element('button', option);
+        button.type = 'button';
 
-        optionButton.addEventListener("click", function() {
+        button.addEventListener('click', () => {
           answers[currentQuestion] = {
             question: question.question,
             selectedOption: option,
@@ -335,7 +416,7 @@
           }
         });
 
-        optionsContainer.appendChild(optionButton);
+        optionsContainer.appendChild(button);
       });
 
       app.append(
@@ -348,12 +429,14 @@
       );
     }
 
+    // ---------------------------------------
+    // 2. IDENTITY MAPPING ALGORITHM
+    // ---------------------------------------
 
-    // -----------------------------------------
-    // 3. IDENTITY MAPPING ALGORITHM
-    // -----------------------------------------
+    function calculateIdentity(responses) {
+      // These are subjective artistic mappings,
+      // NOT scientifically validated scores.
 
-    function calculateIdentity(answers) {
       const scores = {
         visibility: 50,
         expression: 50,
@@ -361,40 +444,25 @@
         interaction: 50
       };
 
-      // Artistic rules designed for this project.
-      // These are not scientific personality scores.
-
       const mappings = [
-        {
-          visibility: 25,
-          interaction: 10
-        },
-        {
-          expression: 25
-        },
-        {
-          privacy: 25
-        },
-        {
-          visibility: 15,
-          privacy: -10
-        },
-        {
-          interaction: 15
-        }
+        { visibility: 25, interaction: 10 },
+        { expression: 25 },
+        { privacy: 25 },
+        { visibility: 15, privacy: -10 },
+        { interaction: 15 }
       ];
 
       const optionWeights = [1, 0.5, 0, -0.5];
 
-      answers.forEach(function(answer, index) {
+      responses.forEach((answer, index) => {
         const weight = optionWeights[answer.selectedIndex];
 
-        Object.keys(mappings[index]).forEach(function(key) {
+        Object.keys(mappings[index]).forEach(key => {
           scores[key] += mappings[index][key] * weight;
         });
       });
 
-      Object.keys(scores).forEach(function(key) {
+      Object.keys(scores).forEach(key => {
         scores[key] = Math.max(
           0,
           Math.min(100, Math.round(scores[key]))
@@ -404,161 +472,319 @@
       return scores;
     }
 
+    // ---------------------------------------
+    // 3. CREATE PORTRAIT CARDS
+    // ---------------------------------------
 
-    // -----------------------------------------
-    // 4. DISPLAY IDENTITY RESULTS
-    // -----------------------------------------
+    function makePortraitCard(
+      title,
+      description,
+      identity,
+      filename
+    ) {
+      const card = element(
+        'article',
+        undefined,
+        'portrait-card'
+      );
 
-    function showResults() {
-      if (activePortrait) {
-        activePortrait.stop();
-        activePortrait = null;
+      card.append(
+        element('h3', title),
+        element('p', description)
+      );
+
+      const portrait =
+        typeof window.createPortrait === 'function'
+          ? window.createPortrait(identity, {
+              label: title + ': generative particle portrait'
+            })
+          : null;
+
+      if (!portrait) {
+        card.appendChild(
+          element(
+            'p',
+            'Portrait unavailable. Please check portrait.js.',
+            'error'
+          )
+        );
+
+        return { card, portrait: null };
       }
 
-      const identity = calculateIdentity(answers);
+      portraits.push(portrait);
+      card.appendChild(portrait.canvas);
+
+      const download = element(
+        'button',
+        'Download Portrait'
+      );
+
+      download.type = 'button';
+
+      download.addEventListener('click', () => {
+        portrait.download(filename);
+      });
+
+      card.appendChild(download);
+
+      return { card, portrait };
+    }
+
+    // ---------------------------------------
+    // 4. RESULTS PAGE
+    // ---------------------------------------
+
+    function showResults() {
+      clearPortraits();
+
+      const original = calculateIdentity(answers);
+      const modified = { ...original };
 
       app.replaceChildren();
 
-      const eyebrow = document.createElement("p");
-      eyebrow.className = "eyebrow";
-      eyebrow.textContent = "Algorithmic Identity Profile";
+      app.append(
+        element(
+          'p',
+          'Algorithmic Identity Profile',
+          'eyebrow'
+        ),
+        element('h1', 'Your Digital Identity'),
+        element(
+          'p',
+          'This is how our algorithm interprets your answers.'
+        )
+      );
 
-      const title = document.createElement("h1");
-      title.textContent = "Your Digital Identity";
+      // Display four original scores
 
-      const description = document.createElement("p");
-      description.textContent =
-        "This is how our algorithm interprets your answers.";
+      const scores = element(
+        'section',
+        undefined,
+        'scores'
+      );
 
-      app.append(eyebrow, title, description);
+      scores.setAttribute(
+        'aria-label',
+        'Original identity scores'
+      );
 
-      const labels = {
-        visibility: "Visibility",
-        expression: "Expression",
-        privacy: "Privacy",
-        interaction: "Interaction"
-      };
+      Object.entries(original).forEach(([key, value]) => {
+        const card = element(
+          'div',
+          undefined,
+          'score-card'
+        );
 
-      Object.entries(identity).forEach(function([key, value]) {
-        const card = document.createElement("div");
-        card.className = "score-card";
+        const label = element(
+          'div',
+          undefined,
+          'score-label'
+        );
 
-        const label = document.createElement("div");
-        label.className = "score-label";
+        label.append(
+          element('span', labels[key]),
+          element('span', `${value}/100`)
+        );
 
-        const name = document.createElement("span");
-        name.textContent = labels[key];
+        const bar = element(
+          'div',
+          undefined,
+          'score-bar'
+        );
 
-        const number = document.createElement("span");
-        number.textContent = `${value}/100`;
+        const fill = element(
+          'div',
+          undefined,
+          'score-fill'
+        );
 
-        label.append(name, number);
-
-        const bar = document.createElement("div");
-        bar.className = "score-bar";
-
-        const fill = document.createElement("div");
-        fill.className = "score-fill";
         fill.style.width = `${value}%`;
 
         bar.appendChild(fill);
         card.append(label, bar);
-        app.appendChild(card);
+        scores.appendChild(card);
       });
 
+      app.appendChild(scores);
 
-      // -----------------------------------------
-      // 5. GENERATIVE DIGITAL PORTRAIT
-      // -----------------------------------------
+      // ---------------------------------------
+      // 5. ORIGINAL VS MODIFIED PORTRAITS
+      // ---------------------------------------
 
-      const portraitSection = document.createElement("section");
-      portraitSection.className = "portrait-container";
-
-      const portraitTitle = document.createElement("h2");
-      portraitTitle.textContent = "Your Algorithmic Portrait";
-
-      const portraitDescription = document.createElement("p");
-      portraitDescription.textContent =
-        "This artwork is generated from your identity " +
-        "parameters using JavaScript Canvas.";
-
-      portraitSection.append(
-        portraitTitle,
-        portraitDescription
+      app.append(
+        element(
+          'h2',
+          'Compare Your Algorithmic Portraits'
+        ),
+        element(
+          'p',
+          'The left portrait preserves the original classification. The right portrait responds to your changes.'
+        )
       );
 
-      if (typeof createPortrait === "function") {
-        const portrait = createPortrait(identity);
+      const grid = element(
+        'section',
+        undefined,
+        'portrait-grid'
+      );
 
-        if (portrait) {
-          activePortrait = portrait;
+      const left = makePortraitCard(
+        'Original Portrait',
+        'Based on your five questionnaire answers.',
+        original,
+        'original-digital-identity.png'
+      );
 
-          portraitSection.appendChild(portrait.canvas);
+      const right = makePortraitCard(
+        'Modified Portrait',
+        'Changes as you adjust the algorithm controls below.',
+        modified,
+        'modified-digital-identity.png'
+      );
 
-          const downloadButton = document.createElement("button");
-          downloadButton.type = "button";
-          downloadButton.textContent = "Download Portrait";
+      grid.append(left.card, right.card);
+      app.appendChild(grid);
 
-          downloadButton.addEventListener("click", function() {
-            portrait.download();
-          });
+      // ---------------------------------------
+      // 6. INTERACTIVE ALGORITHM CONTROLS
+      // ---------------------------------------
 
-          portraitSection.appendChild(downloadButton);
-        }
-      } else {
-        const errorMessage = document.createElement("p");
-        errorMessage.textContent =
-          "Portrait unavailable. Please check portrait.js.";
-        portraitSection.appendChild(errorMessage);
-      }
+      const controls = element(
+        'section',
+        undefined,
+        'controls'
+      );
 
-      app.appendChild(portraitSection);
+      controls.append(
+        element('h2', 'Change the Algorithm'),
+        element(
+          'p',
+          'Move the sliders to challenge the identity assigned by the original algorithm. These controls alter the representation, not your actual identity.'
+        )
+      );
 
+      const sliders = {};
 
-      // -----------------------------------------
-      // 6. CRITICAL REFLECTION
-      // -----------------------------------------
+      Object.keys(original).forEach(key => {
+        const row = element(
+          'div',
+          undefined,
+          'control-row'
+        );
 
-      const note = document.createElement("div");
-      note.className = "note";
+        const label = element('label');
+        const name = element('span', labels[key]);
+        const valueText = element(
+          'output',
+          `${modified[key]}/100`
+        );
 
-      const noteTitle = document.createElement("strong");
-      noteTitle.textContent = "Is this really you?";
+        const slider = document.createElement('input');
 
-      const noteText = document.createElement("p");
-      noteText.textContent =
-        "These scores and visual forms are artistic " +
-        "interpretations, not scientific measurements. " +
-        "Our algorithm converts a limited number of " +
-        "answers into numerical categories. " +
-        "Different rules could produce different results. " +
-        "Who should decide how your digital identity " +
-        "is represented?";
+        slider.type = 'range';
+        slider.min = '0';
+        slider.max = '100';
+        slider.step = '1';
+        slider.value = String(modified[key]);
+        slider.id = `control-${key}`;
 
-      note.append(noteTitle, noteText);
+        label.htmlFor = slider.id;
+        label.append(name, valueText);
 
-      const restartButton = document.createElement("button");
-      restartButton.type = "button";
-      restartButton.textContent = "Start Again";
+        slider.setAttribute(
+          'aria-label',
+          labels[key]
+        );
 
-      restartButton.addEventListener("click", function() {
-        if (activePortrait) {
-          activePortrait.stop();
-          activePortrait = null;
-        }
+        slider.addEventListener('input', () => {
+          modified[key] = Number(slider.value);
 
-        currentQuestion = 0;
-        answers = [];
-        showQuestion();
+          valueText.textContent =
+            `${modified[key]}/100`;
+
+          if (right.portrait) {
+            right.portrait.update(modified);
+          }
+        });
+
+        row.append(
+          label,
+          slider,
+          element('p', hints[key], 'control-hint')
+        );
+
+        controls.appendChild(row);
+
+        sliders[key] = {
+          slider,
+          valueText
+        };
       });
 
-      app.append(note, restartButton);
+      // Reset sliders to the original scores
 
-      console.log("Questionnaire answers:", answers);
-      console.log("Identity parameters:", identity);
+      const reset = element(
+        'button',
+        'Reset Algorithm',
+        'secondary'
+      );
+
+      reset.type = 'button';
+
+      reset.addEventListener('click', () => {
+        Object.keys(original).forEach(key => {
+          modified[key] = original[key];
+
+          sliders[key].slider.value =
+            String(original[key]);
+
+          sliders[key].valueText.textContent =
+            `${original[key]}/100`;
+        });
+
+        if (right.portrait) {
+          right.portrait.update(modified);
+        }
+      });
+
+      controls.appendChild(reset);
+      app.appendChild(controls);
+
+      // ---------------------------------------
+      // 7. CRITICAL REFLECTION
+      // ---------------------------------------
+
+      const note = element(
+        'section',
+        undefined,
+        'note'
+      );
+
+      note.append(
+        element('h3', 'Is this really you?'),
+        element(
+          'p',
+          'These scores and portraits are artistic interpretations, not scientific measurements. A small set of answers has been transformed into numerical categories using rules chosen by the designer. Changing the parameters changes the portrait without changing the person. Who has the power to define your digital identity?'
+        ),
+        element(
+          'p',
+          'Privacy: your answers and images are processed locally in your browser. This website does not send questionnaire responses to a server.',
+          'small'
+        )
+      );
+
+      const restart = element(
+        'button',
+        'Start Again'
+      );
+
+      restart.type = 'button';
+
+      restart.addEventListener('click', startQuiz);
+
+      app.append(note, restart);
     }
   </script>
 </body>
 </html>
-
-     
