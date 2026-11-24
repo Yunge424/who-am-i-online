@@ -67,13 +67,44 @@
   </main>
 
   <script>
-    const button = document.getElementById("startButton");
-    const message = document.getElementById("message");
+    
+const button = document.getElementById("startButton");
+const message = document.getElementById("message");
 
-    button.addEventListener("click", function() {
-      message.textContent =
-        "Your digital identity experiment begins here.";
-    });
+button.addEventListener("click", function() {
+  document.querySelector("main").innerHTML = `
+    <h1>Digital Identity Questionnaire</h1>
+    <p>Let's explore how your online behaviour
+    can be interpreted by an algorithm.</p>
+
+    <h2>Question 1 of 5</h2>
+    <p>How do you usually use social media?</p>
+
+    <button onclick="selectAnswer('sharing')">
+      Sharing my life
+    </button>
+
+    <button onclick="selectAnswer('browsing')">
+      Browsing content
+    </button>
+
+    <button onclick="selectAnswer('communicating')">
+      Communicating with friends
+    </button>
+
+    <button onclick="selectAnswer('information')">
+      Finding information
+    </button>
+
+    <p id="answerMessage"></p>
+  `;
+});
+
+function selectAnswer(answer) {
+  document.getElementById("answerMessage").textContent =
+    "You selected: " + answer;
+}
+
   </script>
 </body>
 </html>
