@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Am I Online?</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #101426;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    main {
+      max-width: 650px;
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: clamp(40px, 8vw, 72px);
+      color: #b5a4ff;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #c6c9dd;
+      line-height: 1.7;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 15px 30px;
+      background: #806bff;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #a493ff;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>WHO AM I ONLINE?</h1>
+    <h2>You are more than your data.</h2>
+
+    <p>
+      An interactive exploration of digital identity,
+      datafication and algorithmic representation.
+    </p>
+
+    <button id="startButton">
+      Start Your Digital Identity Experiment
+    </button>
+
+    <p id="message" aria-live="polite"></p>
+  </main>
+
+  <script>
+    const button = document.getElementById("startButton");
+    const message = document.getElementById("message");
+
+    button.addEventListener("click", function() {
+      message.textContent =
+        "Your digital identity experiment begins here.";
+    });
+  </script>
+</body>
+</html>
 
