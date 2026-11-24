@@ -68,42 +68,136 @@
 
   <script>
     
+
 const button = document.getElementById("startButton");
-const message = document.getElementById("message");
+
+const questions = [
+  {
+    question: "How do you usually use social media?",
+    options: [
+      "Sharing my life",
+      "Browsing content",
+      "Communicating with friends",
+      "Finding information"
+    ]
+  },
+  {
+    question: "How do you prefer to express yourself online?",
+    options: [
+      "Photos and videos",
+      "Written posts",
+      "Emojis and reactions",
+      "I rarely post"
+    ]
+  },
+  {
+    question: "How important is online privacy to you?",
+    options: [
+      "Extremely important",
+      "Very important",
+      "Somewhat important",
+      "Not very important"
+    ]
+  },
+  {
+    question: "What do you usually share online?",
+    options: [
+      "My everyday life",
+      "Carefully selected moments",
+      "My interests and hobbies",
+      "Very little personal information"
+    ]
+  },
+  {
+    question: "How should online platforms understand you?",
+    options: [
+      "Through my interests",
+      "Through my online interactions",
+      "I want to decide myself",
+      "I prefer not to be categorised"
+    ]
+  }
+];
+
+let currentQuestion = 0;
+let answers = [];
 
 button.addEventListener("click", function() {
-  document.querySelector("main").innerHTML = `
-    <h1>Digital Identity Questionnaire</h1>
-    <p>Let's explore how your online behaviour
-    can be interpreted by an algorithm.</p>
-
-    <h2>Question 1 of 5</h2>
-    <p>How do you usually use social media?</p>
-
-    <button onclick="selectAnswer('sharing')">
-      Sharing my life
-    </button>
-
-    <button onclick="selectAnswer('browsing')">
-      Browsing content
-    </button>
-
-    <button onclick="selectAnswer('communicating')">
-      Communicating with friends
-    </button>
-
-    <button onclick="selectAnswer('information')">
-      Finding information
-    </button>
-
-    <p id="answerMessage"></p>
-  `;
+  showQuestion();
 });
 
-function selectAnswer(answer) {
-  document.getElementById("answerMessage").textContent =
-    "You selected: " + answer;
+function showQuestion() {
+  const main = document.querySelector("main");
+  const question = questions[currentQuestion];
+
+  main.innerHTML = "";
+
+  const title = document.createElement("h1");
+  title.textContent = "Digital Identity Questionnaire";
+
+  const progress = document.createElement("h2");
+  progress.textContent =
+    `Question ${currentQuestion + 1} of ${questions.length}`;
+
+  const questionText = document.createElement("p");
+  questionText.textContent = question.question;
+
+  main.append(title, progress, questionText);
+
+  question.options.forEach(function(option, index) {
+    const optionButton = document.createElement("button");
+    optionButton.textContent = option;
+    optionButton.style.margin = "8px";
+
+    optionButton.addEventListener("click", function() {
+      answers[currentQuestion] = {
+        question: question.question,
+        selectedOption: option,
+        selectedIndex: index
+      };
+
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResults();
+      }
+    });
+
+    main.appendChild(optionButton);
+  });
 }
+
+function showResults() {
+  const main = document.querySelector("main");
+  main.innerHTML = "";
+
+  const title = document.createElement("h1");
+  title.textContent = "Your Digital Identity";
+
+  const description = document.createElement("p");
+  description.textContent =
+    "You have completed the questionnaire!";
+
+  const message = document.createElement("p");
+  message.textContent =
+    "Your answers have been recorded in this browser session.";
+
+  const restartButton = document.createElement("button");
+  restartButton.textContent = "Start Again";
+
+  restartButton.addEventListener("click", function() {
+    currentQuestion = 0;
+    answers = [];
+    showQuestion();
+  });
+
+  main.append(title, description, message, restartButton);
+
+  console.log("Questionnaire answers:", answers);
+}
+
 
   </script>
 </body>
